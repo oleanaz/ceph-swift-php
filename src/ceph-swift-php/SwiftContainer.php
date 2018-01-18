@@ -15,6 +15,9 @@ class SwiftContainer
 
     /**
      * SwiftContainer constructor.
+     *
+     * http://docs.ceph.org.cn/radosgw/swift/containerops/
+     *
      * @param $client SwiftClient
      */
     public function __construct($client)

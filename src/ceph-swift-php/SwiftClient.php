@@ -19,21 +19,18 @@ class SwiftClient
      * @var array
      */
     public $config = [];
-
+    /**
+     * @var string
+     */
+    public $baseUrl = '';
+    /**
+     * @var string
+     */
+    public $token = '';
     /**
      * @var Client|null
      */
-    private $client = null;
-
-    /**
-     * @var string
-     */
-    private $baseUrl = '';
-
-    /**
-     * @var string
-     */
-    private $token = '';
+    public $client = null;
 
     /**
      * SwiftClient constructor.
@@ -41,15 +38,18 @@ class SwiftClient
      * http://docs.ceph.org.cn/radosgw/swift/auth/
      *
      * @param $config
-     * host         127.0.0.1:1234
-     * auth-user    demo-user
-     * auth-key     demo-key
+     * host             127.0.0.1:1234
+     * auth-user        auth-user
+     * auth-key         auth-key
+     *
+     * temp-url-key     key
+     * temp-url-key-2   key-2
      *
      * @throws \Exception
      */
     public function __construct($config)
     {
-        foreach (['host', 'auth-user', 'auth-key'] as $key) {
+        foreach (['host', 'auth-user', 'auth-key', 'temp-url-key'] as $key) {
             if (!isset($config[$key])) {
                 throw new \Exception("Ceph Config $key Not Exist");
             }
@@ -74,7 +74,7 @@ class SwiftClient
      *
      * @return bool
      */
-    private function auth($host, $authUser, $authKey)
+    public function auth($host, $authUser, $authKey)
     {
         try {
             $host = str_replace(['https://', 'http://', '/'], ['', '', ''], $host);
@@ -106,11 +106,23 @@ class SwiftClient
     }
 
     /**
+     * http://docs.ceph.org.cn/radosgw/swift/containerops/
+     *
      * @return SwiftContainer
      */
     public function container()
     {
         return new SwiftContainer($this);
+    }
+
+    /**
+     * http://docs.ceph.org.cn/radosgw/swift/tempurl/
+     *
+     * @return SwiftUrl
+     */
+    public function url()
+    {
+        return new SwiftUrl($this);
     }
 
     /**
