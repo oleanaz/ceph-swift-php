@@ -1,10 +1,10 @@
 {
   "name": "liushuangxi/ceph-swift-php",
-  "description": "ceph swift api php client",
+  "description": "ceph swift api client for php",
   "type": "library",
   "keywords": [
     "ceph",
-    "swift",
+    "swift api",
     "php"
   ],
   "time": "2018-01-20",
@@ -20,7 +20,7 @@
   "license": "proprietary",
   "autoload": {
     "psr-4": {
-      "Liushuangxi\\Ceph\\": "src"
+      "Liushuangxi\\Ceph\\": "src/ceph-swift-php"
     }
   }
 }
