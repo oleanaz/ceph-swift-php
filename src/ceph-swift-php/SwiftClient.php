@@ -116,6 +116,14 @@ class SwiftClient
     }
 
     /**
+     * @return SwiftObject
+     */
+    public function object()
+    {
+        return new SwiftObject($this);
+    }
+
+    /**
      * http://docs.ceph.org.cn/radosgw/swift/tempurl/
      *
      * @return SwiftUrl

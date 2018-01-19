@@ -117,18 +117,62 @@ class SwiftContainer
     }
 
     /**
-     * @param $headers
+     * @param $container
+     * @param string $read
+     * @param string $write
+     * @return bool
      */
-    public function updateACLs($headers)
+    public function updateACLs($container, $read = '', $write = '')
     {
+        $headers = [];
+        if (!empty($read)) {
+            $headers['X-Container-Read'] = $read;
+        }
+        if (!empty($write)) {
+            $headers['X-Container-Write'] = $write;
+        }
 
+        $response = $this->client->request(
+            'POST',
+            $container,
+            [
+                'headers' => $headers
+            ]
+        );
+
+        if (!is_null($response)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
-     * @param $headers
+     * @param $container
+     * @param $values
+     * @return bool
      */
-    public function updateMetas($headers)
+    public function updateMetas($container, $values)
     {
+        $headers = [];
+        foreach ($values as $key => $value) {
+            $headers = [
+                "X-Container-Meta-$key" => $value
+            ];
+        }
 
+        $response = $this->client->request(
+            'POST',
+            $container,
+            [
+                'headers' => $headers
+            ]
+        );
+
+        if (!is_null($response)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
