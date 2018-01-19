@@ -97,4 +97,59 @@ class SwiftObject
 
         return !$this->isExistObject($container, $object);
     }
+
+    /**
+     * @param $container
+     * @param $object
+     * @param $values
+     * @return bool
+     */
+    public function updateMetas($container, $object, $values)
+    {
+        $headers = [];
+        foreach ($values as $key => $value) {
+            $headers = [
+                "X-Object-Meta-$key" => $value
+            ];
+        }
+
+        $response = $this->client->request(
+            'POST',
+            $container . "/" . $object,
+            [
+                'headers' => $headers
+            ]
+        );
+
+        if (!is_null($response)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param $container
+     * @param $object
+     * @return array
+     */
+    public function getMeta($container, $object)
+    {
+        $response = $this->client->request(
+            'HEAD',
+            $container . "/" . $object
+        );
+
+        if (!is_null($response) && !empty($response->getHeaders())) {
+            $data = [];
+            foreach ($response->getHeaders() as $key => $value) {
+                if (strpos($key, 'X-Object-Meta-') === 0) {
+                    $data[substr($key, 14)] = $value[0];
+                }
+            }
+            return $data;
+        } else {
+            return [];
+        }
+    }
 }

@@ -17,7 +17,7 @@
   "require": {
     "guzzlehttp/guzzle": "^6.3"
   },
-  "license": "proprietary",
+  "license": "MIT",
   "autoload": {
     "psr-4": {
       "Liushuangxi\\Ceph\\": "src/ceph-swift-php"
