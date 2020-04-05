@@ -12,9 +12,14 @@
     {
       "name": "柳双喜",
       "email": "729021170@qq.com"
+    },
+    {
+      "name": "Sapar Nazir",
+      "email": "nazir.sapar11@gmail.com"
     }
   ],
   "require": {
+    "php" : ">=7.0.0",
     "guzzlehttp/guzzle": "^6.3"
   },
   "license": "MIT",

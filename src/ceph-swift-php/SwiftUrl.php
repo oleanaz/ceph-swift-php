@@ -48,11 +48,7 @@ class SwiftUrl
             ]
         );
 
-        if (!is_null($response)) {
-            return true;
-        } else {
-            return false;
-        }
+        return !is_null($response);
     }
 
     /**
@@ -62,9 +58,9 @@ class SwiftUrl
      */
     public function tempUrl($uri, $expire = 60)
     {
-        $pos = strrpos($this->client->baseUrl, '/');
-        $baseUrl = substr($this->client->baseUrl, 0, $pos);
-        $version = substr($this->client->baseUrl, $pos + 1);
+        $pos = strrpos($this->client->getBaseUrl(), '/');
+        $baseUrl = substr($this->client->getBaseUrl(), 0, $pos);
+        $version = substr($this->client->getBaseUrl(), $pos + 1);
 
         $uri = trim($uri, '/');
         $uri = "/$version/$uri";
@@ -74,7 +70,7 @@ class SwiftUrl
         $sign = hash_hmac(
             'sha1',
             implode("\n", ['GET', $expire, $uri]),
-            $this->client->config['temp-url-key']
+            $this->client->getTempUrl()
         );
 
         $url = $baseUrl . $uri;

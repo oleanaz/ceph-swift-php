@@ -11,22 +11,25 @@ use GuzzleHttp\Client;
 class SwiftClient
 {
     /**
-     *
+     * @var string
      */
     const URL_AUTH = '/auth';
 
     /**
      * @var array
      */
-    public $config = [];
+    protected $config = [];
+
     /**
      * @var string
      */
-    public $baseUrl = '';
+    protected $baseUrl = '';
+
     /**
      * @var string
      */
-    public $token = '';
+    protected $token = '';
+
     /**
      * @var Client|null
      */
@@ -43,13 +46,12 @@ class SwiftClient
      * auth-key         auth-key
      *
      * temp-url-key     key
-     * temp-url-key-2   key-2
      *
      * @throws \Exception
      */
     public function __construct($config)
     {
-        foreach (['host', 'auth-user', 'auth-key', 'temp-url-key'] as $key) {
+        foreach (['host', 'auth-user', 'auth-key'] as $key) {
             if (!isset($config[$key])) {
                 throw new \Exception("Ceph Config $key Not Exist");
             }
@@ -97,12 +99,12 @@ class SwiftClient
                 $this->token = $headers['X-Storage-Token'][0];
 
                 return true;
-            } else {
-                return false;
             }
         } catch (\Exception $e) {
             return false;
         }
+
+        return false;
     }
 
     /**
@@ -152,5 +154,45 @@ class SwiftClient
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthUser(): string
+    {
+        return $this->config['auth-user'];
+    }
+
+    /**
+     * @return string
+     */
+    public function getTempUrl(): string
+    {
+        return $this->config['temp-url-key'] ?? '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getHost(): string
+    {
+        return $this->config['host'] ?? '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getBaseUrl(): string
+    {
+        return $this->baseUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken(): string
+    {
+        return $this->token;
     }
 }

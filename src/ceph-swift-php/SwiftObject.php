@@ -73,11 +73,7 @@ class SwiftObject
             $container . "/" . $object
         );
 
-        if (!is_null($response) && !empty($response->getHeaders())) {
-            return true;
-        } else {
-            return false;
-        }
+        return !is_null($response) && !empty($response->getHeaders());
     }
 
     /**
@@ -121,11 +117,7 @@ class SwiftObject
             ]
         );
 
-        if (!is_null($response)) {
-            return true;
-        } else {
-            return false;
-        }
+        return !is_null($response);
     }
 
     /**
@@ -142,14 +134,39 @@ class SwiftObject
 
         if (!is_null($response) && !empty($response->getHeaders())) {
             $data = [];
+
             foreach ($response->getHeaders() as $key => $value) {
                 if (strpos($key, 'X-Object-Meta-') === 0) {
                     $data[substr($key, 14)] = $value[0];
                 }
             }
+
             return $data;
-        } else {
-            return [];
         }
+
+        return [];
+    }
+
+    /**
+     * @param $container
+     * @param $object
+     * @param $path
+     * @return bool
+     */
+    public function getObject($container, $object, $path)
+    {
+        $resource = fopen($path,'w');
+
+        if (!$resource) {
+            return false;
+        }
+
+        $response = $this->client->request(
+            'GET',
+            $container . "/" . $object,
+            ['sink' => $resource]
+        );
+
+        return !is_null($response);
     }
 }

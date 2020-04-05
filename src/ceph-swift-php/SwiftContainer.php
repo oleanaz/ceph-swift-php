@@ -64,8 +64,8 @@ class SwiftContainer
     {
         if (empty($headers)) {
             $headers = [
-                'X-Container-Read' => $this->client->config['auth-user'],
-                'X-Container-Write' => $this->client->config['auth-user']
+                'X-Container-Read' => $this->client->getAuthUser(),
+                'X-Container-Write' => $this->client->getAuthUser()
             ];
         }
 
@@ -95,11 +95,7 @@ class SwiftContainer
             $container
         );
 
-        if (!is_null($response) && !empty($response->getHeaders())) {
-            return true;
-        } else {
-            return false;
-        }
+        return !is_null($response) && !empty($response->getHeaders());
     }
 
     /**
@@ -140,11 +136,7 @@ class SwiftContainer
             ]
         );
 
-        if (!is_null($response)) {
-            return true;
-        } else {
-            return false;
-        }
+        return !is_null($response);
     }
 
     /**
@@ -169,10 +161,6 @@ class SwiftContainer
             ]
         );
 
-        if (!is_null($response)) {
-            return true;
-        } else {
-            return false;
-        }
+        return !is_null($response);
     }
 }
