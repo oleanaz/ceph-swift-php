@@ -1,5 +1,5 @@
 {
-  "name": "oleanaz/ceph-swift-php",
+  "name": "liushuangxi/ceph-swift-php",
   "description": "ceph swift api client for php",
   "type": "library",
   "keywords": [
