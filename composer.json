@@ -20,12 +20,13 @@
   ],
   "require": {
     "php" : ">=7.0.0",
-    "guzzlehttp/guzzle": "^6.3"
+    "guzzlehttp/guzzle": "^6.3",
+    "psr/log": "~1.0"
   },
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "Liushuangxi\\Ceph\\": "src/ceph-swift-php"
+      "Liushuangxi\\Ceph\\": "src/"
     }
   }
 }

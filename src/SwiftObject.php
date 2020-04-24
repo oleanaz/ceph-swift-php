@@ -2,12 +2,16 @@
 
 namespace Liushuangxi\Ceph;
 
+use Liushuangxi\Ceph\Traits\Logger;
+
 /**
  * Class SwiftObject
  * @package Liushuangxi\Ceph
  */
 class SwiftObject
 {
+    use Logger;
+
     /**
      * @var SwiftClient
      */
@@ -40,7 +44,7 @@ class SwiftObject
         }
 
         try {
-            $response = $this->client->request(
+            $this->client->request(
                 'PUT',
                 $container . "/" . $object,
                 [
@@ -52,6 +56,12 @@ class SwiftObject
                 return $object;
             }
         } catch (\Exception $e) {
+            $this->error('Error while creating object', [
+                'exception' => $e,
+                'container' => $container,
+                'file'      => $file,
+            ]);
+
             return false;
         }
 

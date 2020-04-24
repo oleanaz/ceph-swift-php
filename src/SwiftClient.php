@@ -3,6 +3,8 @@
 namespace Liushuangxi\Ceph;
 
 use GuzzleHttp\Client;
+use Liushuangxi\Ceph\Traits\Logger;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class SwiftClient
@@ -10,6 +12,8 @@ use GuzzleHttp\Client;
  */
 class SwiftClient
 {
+    use Logger;
+
     /**
      * @var string
      */
@@ -49,7 +53,7 @@ class SwiftClient
      *
      * @throws \Exception
      */
-    public function __construct($config)
+    public function __construct($config, LoggerInterface $logger = null)
     {
         foreach (['host', 'auth-user', 'auth-key'] as $key) {
             if (!isset($config[$key])) {
@@ -58,12 +62,16 @@ class SwiftClient
         }
 
         $this->config = $config;
-
         $this->client = new Client();
+        $this->logger = $logger;
+        $auth         = $this->auth(
+            $config['host'],
+            $config['auth-user'],
+            $config['auth-key']
+        );
 
-        $auth = $this->auth($config['host'], $config['auth-user'], $config['auth-key']);
         if (!$auth) {
-            throw new \Exception("Ceph Auth Failed");
+            throw new \Exception('Ceph Auth Failed');
         }
     }
 
@@ -101,6 +109,12 @@ class SwiftClient
                 return true;
             }
         } catch (\Exception $e) {
+            $this->error('Ceph Auth Failed', [
+                'exception' => $e,
+                'host'      => $host,
+                'authUser'  => $authUser,
+            ]);
+
             return false;
         }
 
@@ -152,6 +166,12 @@ class SwiftClient
                 $options
             );
         } catch (\Exception $e) {
+            $this->error('Request failed', [
+                'exception' => $e,
+                'method'    => $method,
+                'uri'       => $uri,
+            ]);
+
             return null;
         }
     }
