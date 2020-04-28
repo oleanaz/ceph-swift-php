@@ -87,7 +87,7 @@ class SwiftClient
     public function auth($host, $authUser, $authKey)
     {
         try {
-            $host = str_replace(['https://', 'http://', '/'], ['', '', ''], $host);
+            $host = str_replace(['https://', 'http://'], ['', ''], $host);
 
             $response = $this->client->request(
                 'GET',
