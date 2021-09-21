@@ -70,8 +70,6 @@ class SwiftClient
             $config['auth-key']
         );
 
-        var_dump($auth);
-
         if (!$auth) {
             throw new \Exception('Ceph Auth Failed');
         }
