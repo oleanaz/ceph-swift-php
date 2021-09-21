@@ -102,9 +102,9 @@ class SwiftClient
 
             $headers = $response->getHeaders();
 
-            if (isset($headers['X-Storage-Url'][0]) && isset($headers['X-Storage-Token'][0])) {
-                $this->baseUrl = $headers['X-Storage-Url'][0];
-                $this->token = $headers['X-Storage-Token'][0];
+            if (isset($headers['x-storage-url'][0]) && isset($headers['x-storage-token'][0])) {
+                $this->baseUrl = $headers['x-storage-url'][0];
+                $this->token = $headers['x-storage-token'][0];
 
                 return true;
             }
@@ -214,5 +214,13 @@ class SwiftClient
     public function getToken(): string
     {
         return $this->token;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBucket(): string
+    {
+        return $this->config['bucket'] ?? '';
     }
 }
