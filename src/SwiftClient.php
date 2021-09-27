@@ -102,19 +102,23 @@ class SwiftClient
                 ]
             );
 
-            $headers = $response->getHeaders();
+            $headers      = $response->getHeaders();
+            $storageUrl   = 'X-Storage-Url';
+            $storageToken = 'X-Storage-Token';
 
             if ((int) $version == 1){
-                if (isset($headers['X-Storage-Url'][0]) && isset($headers['X-Storage-Token'][0])) {
-                    $this->baseUrl = $headers['X-Storage-Url'][0];
-                    $this->token = $headers['X-Storage-Token'][0];
+                if (isset($headers[$storageUrl][0]) && isset($headers[$storageToken][0])) {
+                    $this->baseUrl = $headers[$storageUrl][0];
+                    $this->token = $headers[$storageToken][0];
 
                     return true;
                 }
             } elseif ((int) $version == 2) {
-                if (isset($headers['x-storage-url'][0]) && isset($headers['x-storage-token'][0])) {
-                    $this->baseUrl = $headers['x-storage-url'][0];
-                    $this->token = $headers['x-storage-token'][0];
+                $storageUrl = strtolower($storageUrl);
+                $storageToken = strtolower($storageToken);
+                if (isset($headers[$storageUrl][0]) && isset($headers[$storageToken][0])) {
+                    $this->baseUrl = $headers[$storageUrl][0];
+                    $this->token = $headers[$storageToken][0];
 
                     return true;
                 }
