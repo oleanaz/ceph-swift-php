@@ -107,22 +107,16 @@ class SwiftClient
             $storageUrl   = 'X-Storage-Url';
             $storageToken = 'X-Storage-Token';
 
-            if ((int)$version == 1) {
-                if (isset($headers[$storageUrl][0]) && isset($headers[$storageToken][0])) {
-                    $this->baseUrl = $headers[$storageUrl][0];
-                    $this->token   = $headers[$storageToken][0];
-
-                    return true;
-                }
-            } elseif ((int)$version == 2) {
+            if ((int) $version == 2) {
                 $storageUrl   = strtolower($storageUrl);
                 $storageToken = strtolower($storageToken);
-                if (isset($headers[$storageUrl][0]) && isset($headers[$storageToken][0])) {
-                    $this->baseUrl = $headers[$storageUrl][0];
-                    $this->token   = $headers[$storageToken][0];
+            }
 
-                    return true;
-                }
+            if (isset($headers[$storageUrl][0]) && isset($headers[$storageToken][0])) {
+                $this->baseUrl = $headers[$storageUrl][0];
+                $this->token   = $headers[$storageToken][0];
+
+                return true;
             }
         } catch (\Exception $e) {
             $this->error('Ceph Auth Failed', [
