@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Class SwiftClient
+ *
  * @package Liushuangxi\Ceph
  */
 class SwiftClient
@@ -67,7 +68,8 @@ class SwiftClient
         $auth         = $this->auth(
             $config['host'],
             $config['auth-user'],
-            $config['auth-key']
+            $config['auth-key'],
+            $config['version']
         );
 
         if (!$auth) {
@@ -81,10 +83,11 @@ class SwiftClient
      * @param $host
      * @param $authUser
      * @param $authKey
+     * @param $version
      *
      * @return bool
      */
-    public function auth($host, $authUser, $authKey)
+    public function auth($host, $authUser, $authKey, $version)
     {
         try {
             $host = str_replace(['https://', 'http://'], ['', ''], $host);
@@ -95,16 +98,23 @@ class SwiftClient
                 [
                     'headers' => [
                         'X-Auth-User' => $authUser,
-                        'X-Auth-Key' => $authKey,
-                    ]
+                        'X-Auth-Key'  => $authKey,
+                    ],
                 ]
             );
 
-            $headers = $response->getHeaders();
+            $headers      = $response->getHeaders();
+            $storageUrl   = 'X-Storage-Url';
+            $storageToken = 'X-Storage-Token';
 
-            if (isset($headers['x-storage-url'][0]) && isset($headers['x-storage-token'][0])) {
-                $this->baseUrl = $headers['x-storage-url'][0];
-                $this->token = $headers['x-storage-token'][0];
+            if ((int) $version == 2) {
+                $storageUrl   = strtolower($storageUrl);
+                $storageToken = strtolower($storageToken);
+            }
+
+            if (isset($headers[$storageUrl][0]) && isset($headers[$storageToken][0])) {
+                $this->baseUrl = $headers[$storageUrl][0];
+                $this->token   = $headers[$storageToken][0];
 
                 return true;
             }
@@ -150,9 +160,9 @@ class SwiftClient
     }
 
     /**
-     * @param $method
+     * @param        $method
      * @param string $uri
-     * @param array $options
+     * @param array  $options
      * @return mixed|null|\Psr\Http\Message\ResponseInterface
      */
     public function request($method, $uri = '', array $options = [])
