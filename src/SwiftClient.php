@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Class SwiftClient
+ *
  * @package Liushuangxi\Ceph
  */
 class SwiftClient
@@ -97,8 +98,8 @@ class SwiftClient
                 [
                     'headers' => [
                         'X-Auth-User' => $authUser,
-                        'X-Auth-Key' => $authKey,
-                    ]
+                        'X-Auth-Key'  => $authKey,
+                    ],
                 ]
             );
 
@@ -106,19 +107,19 @@ class SwiftClient
             $storageUrl   = 'X-Storage-Url';
             $storageToken = 'X-Storage-Token';
 
-            if ((int) $version == 1){
+            if ((int)$version == 1) {
                 if (isset($headers[$storageUrl][0]) && isset($headers[$storageToken][0])) {
                     $this->baseUrl = $headers[$storageUrl][0];
-                    $this->token = $headers[$storageToken][0];
+                    $this->token   = $headers[$storageToken][0];
 
                     return true;
                 }
-            } elseif ((int) $version == 2) {
-                $storageUrl = strtolower($storageUrl);
+            } elseif ((int)$version == 2) {
+                $storageUrl   = strtolower($storageUrl);
                 $storageToken = strtolower($storageToken);
                 if (isset($headers[$storageUrl][0]) && isset($headers[$storageToken][0])) {
                     $this->baseUrl = $headers[$storageUrl][0];
-                    $this->token = $headers[$storageToken][0];
+                    $this->token   = $headers[$storageToken][0];
 
                     return true;
                 }
@@ -165,9 +166,9 @@ class SwiftClient
     }
 
     /**
-     * @param $method
+     * @param        $method
      * @param string $uri
-     * @param array $options
+     * @param array  $options
      * @return mixed|null|\Psr\Http\Message\ResponseInterface
      */
     public function request($method, $uri = '', array $options = [])
