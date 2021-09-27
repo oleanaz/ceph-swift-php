@@ -67,7 +67,8 @@ class SwiftClient
         $auth         = $this->auth(
             $config['host'],
             $config['auth-user'],
-            $config['auth-key']
+            $config['auth-key'],
+            $config['version']
         );
 
         if (!$auth) {
@@ -81,10 +82,11 @@ class SwiftClient
      * @param $host
      * @param $authUser
      * @param $authKey
+     * @param $version
      *
      * @return bool
      */
-    public function auth($host, $authUser, $authKey)
+    public function auth($host, $authUser, $authKey, $version)
     {
         try {
             $host = str_replace(['https://', 'http://'], ['', ''], $host);
@@ -102,11 +104,20 @@ class SwiftClient
 
             $headers = $response->getHeaders();
 
-            if (isset($headers['x-storage-url'][0]) && isset($headers['x-storage-token'][0])) {
-                $this->baseUrl = $headers['x-storage-url'][0];
-                $this->token = $headers['x-storage-token'][0];
+            if ((int) $version == 1){
+                if (isset($headers['X-Storage-Url'][0]) && isset($headers['X-Storage-Token'][0])) {
+                    $this->baseUrl = $headers['X-Storage-Url'][0];
+                    $this->token = $headers['X-Storage-Token'][0];
 
-                return true;
+                    return true;
+                }
+            } elseif ((int) $version == 2) {
+                if (isset($headers['x-storage-url'][0]) && isset($headers['x-storage-token'][0])) {
+                    $this->baseUrl = $headers['x-storage-url'][0];
+                    $this->token = $headers['x-storage-token'][0];
+
+                    return true;
+                }
             }
         } catch (\Exception $e) {
             $this->error('Ceph Auth Failed', [
